@@ -1,107 +1,118 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-class Program
+namespace Assignment10
 {
-    static void Main(string[] args)
+    internal class Program
     {
-        Console.WriteLine("Welcome to the Document Management System!");
-        Console.WriteLine("Please select an operation:");
-        Console.WriteLine("1. Create a new file");
-        Console.WriteLine("2. Read a file");
-        Console.WriteLine("3. Append to a file");
-        Console.WriteLine("4. Delete a file");
-
-        int choice = int.Parse(Console.ReadLine());
-
-        switch (choice)
+        public static void createFile()
         {
-            case 1:
-                Console.WriteLine("Enter the file name:");
-                string createFileName = Console.ReadLine();
-                Console.WriteLine("Enter the file content:");
-                string createFileContent = Console.ReadLine();
-                CreateFile(createFileName, createFileContent);
-                break;
-            case 2:
-                Console.WriteLine("Enter the file name to read:");
-                string readFile = Console.ReadLine();
-                ReadFile(readFile);
-                break;
-            case 3:
-                Console.WriteLine("Enter the file name to append:");
-                string appendFileName = Console.ReadLine();
-                Console.WriteLine("Enter the content to append:");
-                string appendContent = Console.ReadLine();
-                AppendToFile(appendFileName, appendContent);
-                break;
-            case 4:
-                Console.WriteLine("Enter the file name to delete:");
-                string deleteFileName = Console.ReadLine();
-                DeleteFile(deleteFileName);
-                break;
-            default:
-                Console.WriteLine("Invalid choice");
-                break;
-        }
-    }
-
-    static void CreateFile(string fileName, string content)
-    {
-        try
-        {
-            using (StreamWriter writer = File.CreateText(fileName))
+            Console.WriteLine("Enter the Path for the new file");
+            string fpath = Console.ReadLine();
+            Console.WriteLine("Enter the New File's name");
+            string name = Console.ReadLine();
+            string thePath = fpath + name;
+            if (File.Exists(thePath))
             {
-                writer.Write(content);
+                Console.WriteLine("The File Already Exists");
             }
-            Console.WriteLine("File created successfully.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error creating file: " + ex.Message);
-        }
-    }
-
-    static void ReadFile(string fileName)
-    {
-        try
-        {
-            string fileContent = File.ReadAllText(fileName);
-            Console.WriteLine("File content:");
-            Console.WriteLine(fileContent);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error reading file: " + ex.Message);
-        }
-    }
-
-    static void AppendToFile(string fileName, string content)
-    {
-        try
-        {
-            using (StreamWriter writer = File.AppendText(fileName))
+            else
             {
-                writer.Write(content);
+                StreamWriter sw = File.AppendText(thePath);
+                sw.WriteLine("This is Assignment No : 10");
+                sw.WriteLine("Topic : File Handling");
+                sw.Dispose();
+                sw.Close();
+                Console.WriteLine("Now the File is Created in the Directory");
             }
-            Console.WriteLine("Content appended to the file successfully.");
         }
-        catch (Exception ex)
+        public static void readFiles()
         {
-            Console.WriteLine("Error appending to file: " + ex.Message);
+            Console.WriteLine("Enter the File name and its Path to read");
+            string readFile = Console.ReadLine();
+            StreamReader sr = new StreamReader(readFile);
+            string text = "";
+            while ((text = sr.ReadLine()) != null)
+            {
+                Console.WriteLine(text);
+            }
+            sr.Close();
         }
-    }
+        public static void appendFiles()
+        {
+            Console.WriteLine("Enter the Path for the file to Open");
+            string openFile = Console.ReadLine();
+            Console.WriteLine("Enter the Content to Append");
+            string appendFile = Console.ReadLine();
+            File.AppendAllText(openFile, appendFile);
+        }
+        public static void deleteFiles()
+        {
+            Console.WriteLine("Enter the Path for the file to Delete");
+            string deleteFile = Console.ReadLine();
+            File.Delete(deleteFile);
+            Console.WriteLine("The File is Deleted from the Directory");
+        }
+        static void Main(string[] args)
+        {
+        again:
+            try
+            {
+                Console.WriteLine("Choose the File Operation to Perform");
+                Console.WriteLine("1. File Creation \n2. File Reading \n3. File Appending \n4. File Deletion");
+                Console.WriteLine("Enter the operation number");
+                int selection = int.Parse(Console.ReadLine());
+                switch (selection)
+                {
+                    case 1:
+                        {
+                            createFile();
+                            break;
+                        }
+                    case 2:
+                        {
+                            readFiles();
+                            break;
+                        }
+                    case 3:
+                        {
+                            appendFiles();
+                            break;
+                        }
+                    case 4:
+                        {
+                            deleteFiles();
+                            break;
+                        }
+                    default:
+                        {
+                            Console.WriteLine("Wrong Choice");
+                            break;
+                        }
 
-    static void DeleteFile(string fileName)
-    {
-        try
-        {
-            File.Delete(fileName);
-            Console.WriteLine("File deleted successfully.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error deleting file: " + ex.Message);
+                }
+                Console.WriteLine("\n\n");
+                Console.WriteLine("Do you want to Continue?\n1.Yes\t2.No");
+                int opt = int.Parse(Console.ReadLine());
+                if (opt == 1)
+                {
+                    goto again;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                Console.WriteLine("End of the Program");
+            }
+
         }
     }
 }
+
